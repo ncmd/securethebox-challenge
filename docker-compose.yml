@@ -1,0 +1,72 @@
+version: "3.7"
+
+services:
+  traefik:
+    hostname: traefik
+    image: traefik:1.7.10-alpine
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${PWD}/traefik.toml:/traefik.toml
+      - ${PWD}/acme.json:/acme.json
+    ports:
+      - "80:80"
+      - "443:443"
+    labels:
+      - traefik.frontend.rule=Host:monitor.securethebox.us
+      - traefik.docker.network=challenge1
+      - traefik.port=8080
+  nginx-modsecurity:
+    image: really/nginx-modsecurity:latest
+    hostname: nginx-modsecurity
+    links:
+      - juice-shop:juice-shop
+      # - splunk:splunk
+    labels:
+      # For every additional domain, add a DNS record in /etc/hosts file
+      - traefik.enable=true
+      - traefik.waf.backend=waf
+      - traefik.waf.frontend.rule=Host:waf.securethebox.us
+      - traefik.waf.port=80
+      - traefik.docker.network=challenge1
+      - traefik.editor-waf.backend=editor-waf
+      - traefik.editor-waf.frontend.rule=Host:editor-waf.securethebox.us
+      - traefik.editor-waf.port=6000
+    depends_on:
+      - traefik
+  juice-shop:
+    # image: bkimminich/juice-shop:latest
+    image: ncmd/juice-shop:latest
+    # image: jscloudcmd
+    hostname: juice-shop
+    labels:
+      # For every additional domain, add a DNS record in /etc/hosts file
+      - traefik.enable=true
+      - traefik.app.backend=app
+      - traefik.app.frontend.rule=Host:app.securethebox.us
+      - traefik.app.port=3000
+      - traefik.docker.network=challenge1
+      - traefik.editor-app.backend=editor-app
+      - traefik.editor-app.frontend.rule=Host:editor-app.securethebox.us
+      - traefik.editor-app.port=7000
+    depends_on:
+      - traefik
+  # splunk:
+  #   image: splunk/splunk:latest
+  #   hostname: splunk
+  #   environment:
+  #     SPLUNK_START_ARGS: --accept-license
+  #     SPLUNK_PASSWORD: Changeme
+  #   labels:
+  #     - traefik.enable=true
+  #     - traefik.backend=splunk
+  #     - traefik.frontend.rule=Host:splunk.securethebox.us
+  #     - traefik.docker.network=challenge1
+  #     - traefik.port=8000
+  #   depends_on:
+  #     - traefik
+networks:
+  default:
+    # Use a custom driver
+    name: challenge1
+    

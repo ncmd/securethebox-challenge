@@ -1,0 +1,27 @@
+{
+  "name": "securethebox-challenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "ps0":"docker-compose ps",
+    "ps1":"docker exec -u root -it securethebox-challenge_nginx-modsecurity_1 ps aux",
+    "ps2":"docker exec -u root -it securethebox-challenge_juice-shop_1 ps aux",
+    "stop1":"docker exec -u root -it securethebox-challenge_juice-shop_1 forever stopall",
+    "sh1":"docker exec -u root -it securethebox-challenge_juice-shop_1 /bin/sh",
+    "challenge":"run-s challenge0 challenge1 challenge2 challenge3 challenge4 challenge5 challenge6 challenge7 challenge8 challenge9 challenge10",
+    "challenge0": "docker-compose down",
+    "challenge1": "docker-compose up -d",
+    "challenge2": "docker cp ./nginx.conf securethebox-challenge_nginx-modsecurity_1:/etc/nginx/nginx.conf",
+    "challenge3": "sleep 100 ; docker exec -u nginx -it securethebox-challenge_nginx-modsecurity_1 nginx -s reload",
+    "challenge4": "docker exec -u nginx -it securethebox-challenge_nginx-modsecurity_1 apk add nodejs nodejs-npm",
+    "challenge5": "docker exec -u nginx -it securethebox-challenge_nginx-modsecurity_1 npm install -g cloudcmd",
+    "challenge6": "docker exec -u nginx -it securethebox-challenge_nginx-modsecurity_1 npm install -g forever",
+    "challenge7": "docker exec -u nginx -it securethebox-challenge_nginx-modsecurity_1 forever start /usr/bin/cloudcmd --port 6000",
+    "challenge8": "docker exec -u juicer -it securethebox-challenge_juice-shop_1 npm install -g cloudcmd",
+    "challenge9": "docker exec -u juicer -it securethebox-challenge_juice-shop_1 npm install -g forever",
+    "challenge10": "docker exec -u juicer -it securethebox-challenge_juice-shop_1 forever start /usr/local/bin/cloudcmd --port 7000"
+  },
+  "author": "",
+  "license": "ISC"
+}
