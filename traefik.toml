@@ -18,7 +18,7 @@ defaultEntryPoints = ["http", "https"]
 entrypoint="dashboard"
 
 [acme]
-email = "test@securethebox.us"
+email = "acme@securethebox.us"
 storage = "acme.json"
 entryPoint = "https"
 onHostRule = true

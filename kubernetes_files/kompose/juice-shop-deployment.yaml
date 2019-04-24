@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.17.0 (a74acad)
+    traefik.app.backend: app
+    traefik.app.frontend.rule: Host:app.securethebox.us
+    traefik.app.port: "3000"
+    traefik.docker.network: challenge1
+    traefik.editor-app.backend: editor-app
+    traefik.editor-app.frontend.rule: Host:editor-app.securethebox.us
+    traefik.editor-app.port: "7000"
+    traefik.enable: "true"
+  creationTimestamp: null
+  labels:
+    io.kompose.service: juice-shop
+  name: juice-shop
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: juice-shop
+    spec:
+      containers:
+      - image: ncmd/juice-shop:latest
+        name: juice-shop
+        resources: {}
+      hostname: juice-shop
+      restartPolicy: Always
+status: {}

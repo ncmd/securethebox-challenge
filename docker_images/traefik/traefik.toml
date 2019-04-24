@@ -1,0 +1,118 @@
+defaultEntryPoints = ["http", "https"]
+
+[entryPoints]
+  [entryPoints.dashboard]
+    address = ":8080"
+    [entryPoints.dashboard.auth]
+      [entryPoints.dashboard.auth.basic]
+        users = ["admin:$apr1$xqVaeUIK$qIZRhjFalEEvrlBIBXXib."]
+  [entryPoints.http]
+    address = ":80"
+      [entryPoints.http.redirect]
+        entryPoint = "https"
+  [entryPoints.https]
+    address = ":443"
+      [entryPoints.https.tls]
+
+[api]
+entrypoint="dashboard"
+
+[acme]
+email = "acme@securethebox.us"
+storage = "acme.json"
+entryPoint = "https"
+onHostRule = true
+  [acme.httpChallenge]
+  entryPoint = "http"
+
+[docker]
+domain = "securethebox.us"
+watch = true
+network = "challenge1"
+
+################################################################
+# Kubernetes Ingress Provider
+################################################################
+
+# Enable Kubernetes Ingress Provider.
+[kubernetes]
+
+# Kubernetes server endpoint.
+#
+# Optional for in-cluster configuration, required otherwise.
+# Default: empty
+#
+endpoint = "http://localhost:8080"
+
+# Bearer token used for the Kubernetes client configuration.
+#
+# Optional
+# Default: empty
+#
+# token = "my token"
+
+# Path to the certificate authority file.
+# Used for the Kubernetes client configuration.
+#
+# Optional
+# Default: empty
+#
+# certAuthFilePath = "/my/ca.crt"
+
+# Array of namespaces to watch.
+#
+# Optional
+# Default: all namespaces (empty array).
+#
+# namespaces = ["default", "production"]
+
+# Ingress label selector to filter Ingress objects that should be processed.
+#
+# Optional
+# Default: empty (process all Ingresses)
+#
+# labelselector = "A and not B"
+
+# Value of `kubernetes.io/ingress.class` annotation that identifies Ingress objects to be processed.
+# If the parameter is non-empty, only Ingresses containing an annotation with the same value are processed.
+# Otherwise, Ingresses missing the annotation, having an empty value, or the value `traefik` are processed.
+#
+# Optional
+# Default: empty
+#
+# ingressClass = "traefik-internal"
+
+# Disable PassHost Headers.
+#
+# Optional
+# Default: false
+#
+# disablePassHostHeaders = true
+
+# Enable PassTLSCert Headers.
+#
+# Optional
+# Default: false
+#
+# enablePassTLSCert = true
+
+# Override default configuration template.
+#
+# Optional
+# Default: <built-in template>
+#
+# filename = "kubernetes.tmpl"
+
+# Enable IngressEndpoint configuration.
+# This will allow Traefik to update the status section of ingress objects, if desired.
+#
+# Optional
+#
+# [kubernetes.ingressEndpoint]
+#
+# At least one must be configured.
+# `publishedservice` will override the `hostname` and `ip` settings if configured.
+#
+# hostname = "localhost"
+# ip = "127.0.0.1"
+# publishedService = "namespace/servicename"

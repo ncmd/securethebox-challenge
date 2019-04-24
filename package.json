@@ -21,7 +21,12 @@
     "challenge8": "docker exec -u juicer -it securethebox-challenge_juice-shop_1 npm install -g cloudcmd",
     "challenge9": "docker exec -u juicer -it securethebox-challenge_juice-shop_1 npm install -g forever",
     "challenge10": "docker exec -u juicer -it securethebox-challenge_juice-shop_1 forever start /usr/local/bin/cloudcmd --port 7000",
-    "commit": "git add . && git commit -m \"Deploy\" && git push"
+    "commit": "git add . && git commit -m \"Deploy\" && git push",
+    "heroku1":"heroku create stb-traefik",
+    "heroku2":"docker build -t stb-traefik .",
+    "heroku3":"docker tag stb-traefik jidokaus/stb-traefik:latest",
+    "heroku4":"heroku container:push web",
+    "heroku5":"heroku container:release web"
   },
   "author": "",
   "license": "ISC",
